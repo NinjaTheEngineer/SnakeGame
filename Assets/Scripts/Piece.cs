@@ -17,7 +17,7 @@ public class Piece : MonoBehaviour{
     }
     public bool InTheSamePositionOf(Piece piece) {
         if(piece==null){
-            Debug.Log("InTheSamePositionOf, piece is null => return false");
+            Debug.Log("InTheSamePositionOf::Piece is null => return false");
             return false;
         }
         return this.Equals(piece);

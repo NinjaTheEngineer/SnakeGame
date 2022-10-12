@@ -26,10 +26,10 @@ public class SnakeGame : MonoBehaviour {
     }
     private void InitializeGame(){
         if(Snake==null){
-            Debug.Log("Instantiate Snake!");
+            Debug.Log("InitializeGame::Snake is null => Instantiate Snake");
             Snake = Instantiate(snakeGO, new Vector2(Width/2, Height/2), Quaternion.identity).GetComponent<Snake>();
         } else {
-            Debug.Log("Reset Snake!");
+            Debug.Log("InitializeGame::Reset Snake");
             Snake.Reset();
         }
         GameStarted = true;
@@ -38,8 +38,9 @@ public class SnakeGame : MonoBehaviour {
         currentTimer = 0;
     }
     private void Update() {
-        if(!GameStarted){
+        if(!GameStarted || Snake==null){
             InitializeGame();
+            Debug.Log("Update::GameStarted="+GameStarted+", Snake="+Utils.logf(Snake)+" => InitializeGame() and return.");
             return;
         }
         currentTimer += Time.unscaledDeltaTime;
@@ -61,14 +62,14 @@ public class SnakeGame : MonoBehaviour {
     private bool WormRunIntoWall{
         get{
             if(Snake==null){
-                Debug.Log("SnakeRunIntoWall, Snake is null => return true.");
+                Debug.Log("SnakeRunIntoWall::Snake is null => return true.");
                 return true;
             }
             if(wallsInstantiated){
                 int wallsCount = walls.Count;
                 for (int i = 0; i < wallsCount; i++) {
                     if(Snake.RunsInto(walls[i])){
-                        Debug.Log("SnakeRunIntoWall, Snake runs into wall piece="+walls[i] +" => return true.");
+                        Debug.Log("SnakeRunIntoWall::Snake runs into wall piece="+walls[i] +" => return true.");
                         return true;
                     }
                 }
@@ -94,6 +95,10 @@ public class SnakeGame : MonoBehaviour {
         wallsInstantiated = true;
     }
     private void HandleInput(){
+        if(Snake==null){
+            Debug.Log("HandleInput::Snake is null => return");
+            return;
+        }
         if(Input.GetKeyDown(KeyCode.A)){
             Snake.SetDirection(Direction.LEFT);
         } else if(Input.GetKeyDown(KeyCode.D)){
@@ -107,6 +112,10 @@ public class SnakeGame : MonoBehaviour {
     private void CreateApple(){
         int x = 0;
         int y = 0;
+        if(Snake==null){
+            Debug.Log("CreateApple::Snake is null => return");
+            return;
+        }
         while(true){
             bool compatibleLocation = true;
             x = Utils.Random.Next(1, Width-1);
@@ -115,7 +124,7 @@ public class SnakeGame : MonoBehaviour {
 
             for (int i = 0; i < snakePiecesCount; i++) {
                 if(Snake.SnakePieces[i].InTheSamePositionOf(x,y)) {
-                    Debug.Log("CreateApple, location=("+x+","+y+") is in the same position of Snake.SnakePieces[i]="+Snake.SnakePieces[i]+" => compatibleLocation=false");
+                    Debug.Log("CreateApple::new Location=("+x+","+y+") is in the same position of Snake.SnakePieces[i]="+Snake.SnakePieces[i]+" => compatibleLocation=false");
                     compatibleLocation = false;
                 }
             }
@@ -124,10 +133,10 @@ public class SnakeGame : MonoBehaviour {
             }
         }
         if(Apple==null){
-            Debug.Log("CreateApple, Instantiate Apple!");
+            Debug.Log("CreateApple::Apple is null => Instantiate Apple");
             Apple = Instantiate(appleGO, new Vector3(x, y), Quaternion.identity).GetComponent<Piece>();
         } else {
-            Debug.Log("CreateApple, Update Apple position!");
+            Debug.Log("CreateApple::Update Apple position");
             Apple.UpdatePosition(x, y);
         }
     }

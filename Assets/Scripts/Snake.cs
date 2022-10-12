@@ -19,7 +19,7 @@ public class Snake : MonoBehaviour {
         InitializeSnake();
     }
     public void Reset(){
-        Debug.Log("Reset!");
+        Debug.Log("Reset::Reset Game");
         foreach(Piece sp in SnakePieces){
             Destroy(sp.gameObject);
         }
@@ -94,7 +94,7 @@ public class Snake : MonoBehaviour {
     }
     public bool RunsInto(Piece piece) {
         if(piece==null){
-            Debug.Log("RunsInto, piece is null => return false.");
+            Debug.Log("RunsInto::Piece is null => return false.");
             return false;
         }
         return HeadPiece.InTheSamePositionOf(piece);
@@ -102,7 +102,7 @@ public class Snake : MonoBehaviour {
     public bool RunsIntoItself(){
         for (int i = 0; i < Length-1; i++) {
             if(SnakePieces[i].Equals(HeadPiece)){
-                Debug.Log("RunsIntoItself, SnakePiece[i]="+SnakePieces[i]+" is equal to the HeadPiece="+HeadPiece+". => return true.");
+                Debug.Log("RunsIntoItself::SnakePiece[i]="+SnakePieces[i]+" is equal to the HeadPiece="+HeadPiece+". => return true.");
                 return true;
             }
         }
