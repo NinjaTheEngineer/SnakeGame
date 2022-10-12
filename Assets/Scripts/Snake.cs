@@ -40,8 +40,8 @@ public class Snake : MonoBehaviour {
     private Piece HeadPiece => SnakePieces[Length-1];
     private Piece LastTailPiece => SnakePieces[0];
     public void Move() {
-        currentLastPieceX = LastTailPiece.X;
-        currentLastPieceY = LastTailPiece.Y;
+        currentLastPieceX = (int)LastTailPiece.transform.position.x;
+        currentLastPieceY = (int)LastTailPiece.transform.position.y;
 
         switch(currentDirection){
             case Direction.LEFT:
@@ -72,7 +72,7 @@ public class Snake : MonoBehaviour {
     }
     private void MoveHeadPiece(int x, int y) {
         lastHeadPosition = HeadPiece.transform.position;
-        SnakePieces.Add(Instantiate(snakePieceGO, new Vector3(HeadPiece.X+x, HeadPiece.Y+y), Quaternion.identity).GetComponent<Piece>());
+        SnakePieces.Add(Instantiate(snakePieceGO, new Vector3(HeadPiece.transform.position.x+x, HeadPiece.transform.position.y+y), Quaternion.identity).GetComponent<Piece>());
         GameObject lastPiece = LastTailPiece.gameObject;
         SnakePieces.RemoveAt(0);
         Destroy(lastPiece);

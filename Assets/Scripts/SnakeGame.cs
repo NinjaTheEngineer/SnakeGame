@@ -123,7 +123,7 @@ public class SnakeGame : MonoBehaviour {
             int snakePiecesCount = Snake.Length;
 
             for (int i = 0; i < snakePiecesCount; i++) {
-                if(Snake.SnakePieces[i].InTheSamePositionOf(x,y)) {
+                if(Snake.SnakePieces[i].IsAt(x,y)) {
                     Debug.Log("CreateApple::new Location=("+x+","+y+") is in the same position of Snake.SnakePieces[i]="+Snake.SnakePieces[i]+" => compatibleLocation=false");
                     compatibleLocation = false;
                 }
