@@ -17,6 +17,7 @@ public class SnakeGame : MonoBehaviour {
     public GameObject appleGO;
     public GameObject snakeGO;
     public GameObject wallGO;
+    bool wallsInstantiated = false;
     List<Piece> walls = new List<Piece>();
 
     private void Start() {
@@ -79,7 +80,6 @@ public class SnakeGame : MonoBehaviour {
         float newMoveDelay = initialMoveDelay - Snake.Length*moveDelayDecreaseAmount;
         currentMoveDelay = newMoveDelay<minMoveDelay?minMoveDelay:newMoveDelay;
     }
-    bool wallsInstantiated = false;
     private void DrawWalls(){
         if(wallsInstantiated){
             return;

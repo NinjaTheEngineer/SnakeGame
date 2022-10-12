@@ -64,7 +64,6 @@ public class Snake : MonoBehaviour {
         MoveTailPieces();
         alreadyMoved = true;
     }
-    public void IncrementLength() => currentTargetLength++;
     private bool IsDirectionValid(Direction direction) {
         return !((currentDirection==Direction.LEFT && direction==Direction.RIGHT) ||
                 (currentDirection==Direction.RIGHT && direction==Direction.LEFT) || 
