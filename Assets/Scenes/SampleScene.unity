@@ -257,6 +257,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3941846432043289414, guid: 53eecbabf3dd2414a9b20d805fb0ef32, type: 3}
+      propertyPath: currentMoveDelay
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3941846432043289415, guid: 53eecbabf3dd2414a9b20d805fb0ef32, type: 3}
       propertyPath: m_Name
       value: SnakeGame

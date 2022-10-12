@@ -6,30 +6,35 @@ using System;
 public class SnakeGame : MonoBehaviour {
     [SerializeField]private int Width = 15;
     [SerializeField]private int Height = 10;
-    private Worm Worm;
-    private Apple Apple;
+    private Snake Snake;
+    private Piece Apple;
     private bool GameStarted;
-    [SerializeField] private float currentMoveDelay = 0;
+    [SerializeField] private float currentMoveDelay = 1;
     private float currentTimer;
     public float minMoveDelay = 0.25f;
     public float initialMoveDelay = 2f;
     public float moveDelayDecreaseAmount = 0.05f;
     public GameObject appleGO;
-    public GameObject wormGO;
+    public GameObject snakeGO;
     public GameObject wallGO;
-    List<Wall> walls = new List<Wall>();
+    List<Piece> walls = new List<Piece>();
 
     private void Start() {
         Camera.main.transform.position = new Vector3(Width/2, Height/2, -10);
         InitializeGame();
     }
     private void InitializeGame(){
-        Worm = new Worm(Width/2, Height/2, Direction.DOWN);
-        CreateApple();
-        DrawWalls();
-        DrawGame();    
-        currentTimer = 0;
+        if(Snake==null){
+            Debug.Log("Instantiate Snake!");
+            Snake = Instantiate(snakeGO, new Vector2(Width/2, Height/2), Quaternion.identity).GetComponent<Snake>();
+        } else {
+            Debug.Log("Reset Snake!");
+            Snake.Reset();
+        }
         GameStarted = true;
+        DrawWalls();
+        CreateApple();
+        currentTimer = 0;
     }
     private void Update() {
         if(!GameStarted){
@@ -37,33 +42,32 @@ public class SnakeGame : MonoBehaviour {
             return;
         }
         currentTimer += Time.unscaledDeltaTime;
-        if(currentTimer>currentMoveDelay && Worm!=null){
+        if(currentTimer>currentMoveDelay && Snake!=null){
             currentTimer=0;
-            Worm.Move();
-            if(Worm.RunsIntoItself() || WormRunIntoWall){
+            Snake.Move();
+            if(Snake.RunsIntoItself() || WormRunIntoWall){
                 GameStarted = false;
                 return;
             }
-            if(Worm.RunsInto(Apple)){
-                Worm.Grow();
+            if(Snake.RunsInto(Apple)){
+                Snake.Grow();
                 CreateApple();
             }
             HandleMoveDelay();
-            DrawGame();
         }
         HandleInput();
     }
     private bool WormRunIntoWall{
         get{
-            if(Worm==null){
-                Debug.Log("WormRunIntoWall, Worm is null => return true.");
+            if(Snake==null){
+                Debug.Log("SnakeRunIntoWall, Snake is null => return true.");
                 return true;
             }
             if(wallsInstantiated){
                 int wallsCount = walls.Count;
                 for (int i = 0; i < wallsCount; i++) {
-                    if(Worm.RunsInto(walls[i])){
-                        Debug.Log("WormRunIntoWall, Worm runs into wall piece="+walls[i] +" => return true.");
+                    if(Snake.RunsInto(walls[i])){
+                        Debug.Log("SnakeRunIntoWall, Snake runs into wall piece="+walls[i] +" => return true.");
                         return true;
                     }
                 }
@@ -72,15 +76,8 @@ public class SnakeGame : MonoBehaviour {
         }
     }
     private void HandleMoveDelay(){
-        float newMoveDelay = initialMoveDelay - Worm.WormPieces.Count*moveDelayDecreaseAmount;
+        float newMoveDelay = initialMoveDelay - Snake.Length*moveDelayDecreaseAmount;
         currentMoveDelay = newMoveDelay<minMoveDelay?minMoveDelay:newMoveDelay;
-    }
-    private void DrawGame(){
-        int wormPiecesCount = Worm.WormPieces.Count;
-        for (int i = 0; i < wormPiecesCount; i++) {
-            Destroy(Instantiate(wormGO, new Vector2(Worm.WormPieces[i].X, Worm.WormPieces[i].Y), Quaternion.identity),currentMoveDelay+0.02f);
-        }
-        Destroy(Instantiate(appleGO, new Vector2(Apple.X, Apple.Y), Quaternion.identity),currentMoveDelay+0.02f);
     }
     bool wallsInstantiated = false;
     private void DrawWalls(){
@@ -90,8 +87,7 @@ public class SnakeGame : MonoBehaviour {
         for(int i = 0; i <= Width; i++){
             for(int j = 0; j <= Height; j++){
                 if(j==0 || j == Height || i==0 || i==Width){
-                    walls.Add(new Wall(i, j));
-                    Instantiate(wallGO, new Vector2(i, j), Quaternion.identity);
+                    walls.Add(Instantiate(wallGO, new Vector2(i, j), Quaternion.identity).GetComponent<Piece>());
                 }
             }
         }
@@ -99,13 +95,13 @@ public class SnakeGame : MonoBehaviour {
     }
     private void HandleInput(){
         if(Input.GetKeyDown(KeyCode.A)){
-            Worm.SetDirection(Direction.LEFT);
+            Snake.SetDirection(Direction.LEFT);
         } else if(Input.GetKeyDown(KeyCode.D)){
-            Worm.SetDirection(Direction.RIGHT);
+            Snake.SetDirection(Direction.RIGHT);
         } else if(Input.GetKeyDown(KeyCode.W)){
-            Worm.SetDirection(Direction.UP);
+            Snake.SetDirection(Direction.UP);
         } else if(Input.GetKeyDown(KeyCode.S)){
-            Worm.SetDirection(Direction.DOWN);
+            Snake.SetDirection(Direction.DOWN);
         }
     }
     private void CreateApple(){
@@ -115,11 +111,11 @@ public class SnakeGame : MonoBehaviour {
             bool compatibleLocation = true;
             x = Utils.Random.Next(1, Width-1);
             y = Utils.Random.Next(1, Height-1);
-            int wormPiecesCount = Worm.WormPieces.Count;
-            Piece newPiece = new Piece(x,y);
-            for (int i = 0; i < wormPiecesCount; i++) {
-                if(newPiece.InTheSamePositionOf(Worm.WormPieces[i])) {
-                    Debug.Log("CreateApple, newPiece="+newPiece+" is in the same position of Worm.WormPieces[i]="+Worm.WormPieces[i]+" => compatibleLocation=false");
+            int snakePiecesCount = Snake.SnakePieces.Count;
+
+            for (int i = 0; i < snakePiecesCount; i++) {
+                if(Snake.SnakePieces[i].InTheSamePositionOf(x,y)) {
+                    Debug.Log("CreateApple, location=("+x+","+y+") is in the same position of Snake.SnakePieces[i]="+Snake.SnakePieces[i]+" => compatibleLocation=false");
                     compatibleLocation = false;
                 }
             }
@@ -127,7 +123,13 @@ public class SnakeGame : MonoBehaviour {
                 break;
             }
         }
-        Apple = new Apple(x, y);
+        if(Apple==null){
+            Debug.Log("CreateApple, Instantiate Apple!");
+            Apple = Instantiate(appleGO, new Vector3(x, y), Quaternion.identity).GetComponent<Piece>();
+        } else {
+            Debug.Log("CreateApple, Update Apple position!");
+            Apple.UpdatePosition(x, y);
+        }
     }
     
 }

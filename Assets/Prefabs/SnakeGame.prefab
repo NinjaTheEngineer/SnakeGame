@@ -50,5 +50,5 @@ MonoBehaviour:
   initialMoveDelay: 0.7
   moveDelayDecreaseAmount: 0.05
   appleGO: {fileID: 5643245363078392858, guid: b42c7cdcb8c6ef649847631f2b751370, type: 3}
-  wormGO: {fileID: 5672233899508901456, guid: fbc0757545cb6bc4394782382911afe1, type: 3}
+  snakeGO: {fileID: 5672233899508901456, guid: fbc0757545cb6bc4394782382911afe1, type: 3}
   wallGO: {fileID: 5181638019314586922, guid: 06bd2951aa7cb85478f3d332783fc30f, type: 3}
