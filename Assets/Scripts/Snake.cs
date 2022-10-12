@@ -13,7 +13,7 @@ public class Snake : MonoBehaviour {
     private bool alreadyMoved;
     private int initX, initY;
     Vector3 lastHeadPosition = Vector3.zero;
-    public void Awake() {
+    private void Awake() {
         initX = (int)transform.position.x;
         initY = (int)transform.position.y;
         InitializeSnake();
@@ -37,8 +37,8 @@ public class Snake : MonoBehaviour {
         }
     }
     public int Length => SnakePieces.Count;
-    public Piece HeadPiece => SnakePieces[Length-1];
-    public Piece LastTailPiece => SnakePieces[0];
+    private Piece HeadPiece => SnakePieces[Length-1];
+    private Piece LastTailPiece => SnakePieces[0];
     public void Move() {
         currentLastPieceX = LastTailPiece.X;
         currentLastPieceY = LastTailPiece.Y;
@@ -70,7 +70,7 @@ public class Snake : MonoBehaviour {
                 (currentDirection==Direction.UP && direction==Direction.DOWN) || 
                 (currentDirection==Direction.DOWN && direction==Direction.UP));
     }
-    public void MoveHeadPiece(int x, int y) {
+    private void MoveHeadPiece(int x, int y) {
         lastHeadPosition = HeadPiece.transform.position;
         SnakePieces.Add(Instantiate(snakePieceGO, new Vector3(HeadPiece.X+x, HeadPiece.Y+y), Quaternion.identity).GetComponent<Piece>());
         GameObject lastPiece = LastTailPiece.gameObject;
@@ -79,7 +79,7 @@ public class Snake : MonoBehaviour {
     }
     private void MoveTailPieces(){
         Vector3 lastPosition = lastHeadPosition;
-        int tailsPiecesCount = SnakePieces.Count-2;
+        int tailsPiecesCount = Length-2;
         for (int i = tailsPiecesCount; i >= 0; i--) {
             Vector3 temp = SnakePieces[i].transform.position;
             SnakePieces[i].UpdatePosition((int)lastPosition.x, (int)lastPosition.y);

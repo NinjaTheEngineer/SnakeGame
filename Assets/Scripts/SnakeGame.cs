@@ -120,7 +120,7 @@ public class SnakeGame : MonoBehaviour {
             bool compatibleLocation = true;
             x = Utils.Random.Next(1, Width-1);
             y = Utils.Random.Next(1, Height-1);
-            int snakePiecesCount = Snake.SnakePieces.Count;
+            int snakePiecesCount = Snake.Length;
 
             for (int i = 0; i < snakePiecesCount; i++) {
                 if(Snake.SnakePieces[i].InTheSamePositionOf(x,y)) {
