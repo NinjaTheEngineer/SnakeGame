@@ -109,10 +109,10 @@ public class SnakeGame : MonoBehaviour {
         }
     }
     private void CreateApple(){
-        bool compatibleLocation = true;
         int x = 0;
         int y = 0;
         while(true){
+            bool compatibleLocation = true;
             x = Utils.Random.Next(1, Width-1);
             y = Utils.Random.Next(1, Height-1);
             int wormPiecesCount = Worm.WormPieces.Count;
